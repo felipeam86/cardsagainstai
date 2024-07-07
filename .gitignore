@@ -1,0 +1,7 @@
+.env
+*pyc
+poetry.lock
+*ipynb
+*.ipynb_checkpoints
+*.sqlite
+*.pdf
