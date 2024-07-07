@@ -69,10 +69,13 @@ Cards Against AI is a web-based game inspired by Cards Against Humanity, featuri
 - Appears after cards are submitted
 - Full-screen overlay with semi-transparent black background
 - Modal content:
-  - Green background for player win, blue for AI win
-  - Displays round winner
-  - Shows winning card combination (black card + white card(s))
-  - Judge's explanation
+  - White background with rounded corners and shadow
+  - Displays the black card at the top
+  - Shows both the player's and AI's selected white cards side by side
+  - Highlights the winning combination with a colored background and border
+    - Green for player win
+    - Blue for AI win
+  - Judge's explanation of the winning combination
   - Social sharing buttons (Twitter, Facebook, LinkedIn)
   - "Next Round" button
 
@@ -82,15 +85,15 @@ Cards Against AI is a web-based game inspired by Cards Against Humanity, featuri
 3. Black card is displayed for the round
 4. Player selects the required number of white cards
 5. Player submits their selection
-6. Judge Decision Modal appears with the round results
+6. Judge Decision Modal appears with both player's and AI's selections, highlighting the winner
 7. Player can share the result or proceed to the next round
 
 ## Design Principles
 - High contrast between black and white elements
-- Simple color scheme: black, white, shades of gray, with blue and green accents
+- Simple color scheme: black, white, shades of gray, with blue and green accents for highlighting
 - Responsive layout adaptable to different screen sizes
 - Use of icons for visual representation of game elements
-- Clear visual feedback for card selection and button states
+- Clear visual feedback for card selection and round results
 
 ## Accessibility Considerations
 - Ensure sufficient color contrast for text readability
@@ -110,5 +113,6 @@ Cards Against AI is a web-based game inspired by Cards Against Humanity, featuri
 - Create reusable components for cards to maintain consistency
 - Implement actual social sharing functionality
 - Consider implementing a custom hook for card selection logic
+- Ensure smooth transitions when showing and hiding the judge decision modal
 
 This summary provides a comprehensive overview of the design decisions for the Cards Against AI game. It covers the overall structure, detailed component specifications, gameplay flow, and design principles. The front-end developer should use this as a guide for implementing the user interface and interactions of the game.
