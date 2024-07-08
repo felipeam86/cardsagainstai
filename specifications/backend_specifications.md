@@ -71,7 +71,7 @@ The data model is based on the provided SQLite schema, which includes tables for
    d. Determine round winner and update scores
    e. Replenish hands by drawing new white cards from the remaining deck
    f. Record round history
-4. After 10 rounds, determine the game winner
+4. After 10 rounds, determine the game winner. Add an extra tiebraker round if needed
 5. Save detailed game history
 
 ### AI Integration:
