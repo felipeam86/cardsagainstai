@@ -47,6 +47,10 @@ The data model is based on the provided SQLite schema, which includes tables for
 ### Server Status:
 - GET /status: Check server capacity
 
+### AI Personalities:
+- GET /ai-personalities: Fetch available AI personalities
+- POST /ai-personalities: Create a new AI personality
+
 ## 5. Game Logic
 
 ### User Sessions:
@@ -62,7 +66,7 @@ The data model is based on the provided SQLite schema, which includes tables for
 - Ensure fair and random distribution of cards to both the user and AI opponent
 
 ### Game Flow:
-1. User creates a game session
+1. User creates a game session by selecting or creating an AI opponent personality.
 2. Game starts with drawing initial hands for both the user and AI opponent from the same deck
 3. For each round:
    a. Display a black card (removed from the black card deck)
@@ -107,7 +111,8 @@ cards_against_ai/
 │   │   ├── game_state.py
 │   │   ├── card_manager.py
 │   │   ├── history_manager.py
-│   │   └── redis_manager.py
+│   │   ├── redis_manager.py
+│   │   └── ai_personality_manager.py
 │   └── utils/
 │       └── logging.py
 ├── tests/

@@ -51,7 +51,9 @@ CREATE TABLE IF NOT EXISTS ai_personalities (
     id INTEGER PRIMARY KEY,
     name VARCHAR NOT NULL UNIQUE,
     description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_by INTEGER,
+    FOREIGN KEY (created_by) REFERENCES users(id)
 );
 
 CREATE TABLE IF NOT EXISTS game_sessions (
