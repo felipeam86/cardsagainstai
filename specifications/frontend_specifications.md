@@ -88,6 +88,20 @@ Cards Against AI is a web-based game inspired by Cards Against Humanity, featuri
 6. Judge Decision Modal appears with both player's and AI's selections, highlighting the winner
 7. Player can share the result or proceed to the next round
 
+## Error Handling and Game Termination
+
+### Error Display
+1. Create a simple Error Modal component for displaying Anthropic API errors.
+2. The Error Modal should include:
+   - A hazard icon (e.g., exclamation triangle)
+   - An apology message
+   - A "Return to Home" button
+
+### Error Scenario
+1. Anthropic API Errors:
+   - Display the Error Modal when unable to communicate with the Anthropic API
+   - End the game and return to the home screen when the user acknowledges the error
+
 ## Design Principles
 - High contrast between black and white elements
 - Simple color scheme: black, white, shades of gray, with blue and green accents for highlighting
