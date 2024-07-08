@@ -51,6 +51,16 @@ The data model is based on the provided SQLite schema, which includes tables for
 - GET /ai-personalities: Fetch available AI personalities
 - POST /ai-personalities: Create a new AI personality
 
+### Score Management
+   - GET /games/{game_id}/scores: Retrieve current game scores
+   - POST /games/{game_id}/scores: Update scores after a round
+
+### Game Completion
+   - POST /games/{game_id}/complete: Finalize a game
+
+### Social Sharing: To align with frontend specifications, add:
+   - POST /games/{game_id}/share: Generate shareable content for social media
+
 ## 5. Game Logic
 
 ### User Sessions:
