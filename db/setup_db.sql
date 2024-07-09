@@ -65,17 +65,38 @@ CREATE TABLE IF NOT EXISTS game_sessions (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (ai_personality_id) REFERENCES ai_personalities(id)
 );
-
-CREATE TABLE IF NOT EXISTS scores (
-    id INTEGER PRIMARY KEY,
-    game_session_id INTEGER NOT NULL,
-    round INTEGER NOT NULL,
-    user_score INTEGER NOT NULL,
-    ai_score INTEGER NOT NULL,
-    FOREIGN KEY (game_session_id) REFERENCES game_sessions(id)
-);
-
--- Indexes for performance (create if they don't exist)
 CREATE INDEX IF NOT EXISTS idx_game_sessions_user_id ON game_sessions(user_id);
 CREATE INDEX IF NOT EXISTS idx_game_sessions_ai_personality_id ON game_sessions(ai_personality_id);
-CREATE INDEX IF NOT EXISTS idx_scores_game_session_id ON scores(game_session_id);
+
+CREATE TABLE IF NOT EXISTS game_rounds (
+    id INTEGER PRIMARY KEY,
+    game_session_id INTEGER NOT NULL,
+    round_number INTEGER NOT NULL,
+    black_card_id INTEGER NOT NULL,
+    user_score INTEGER NOT NULL,
+    ai_score INTEGER NOT NULL,
+    winner VARCHAR NOT NULL CHECK (winner IN ('user', 'ai')),
+    judge_explanation TEXT,
+    FOREIGN KEY (game_session_id) REFERENCES game_sessions(id),
+    FOREIGN KEY (black_card_id) REFERENCES black_cards(id)
+);
+CREATE INDEX IF NOT EXISTS idx_game_rounds_game_session_id ON game_rounds(game_session_id);
+CREATE INDEX IF NOT EXISTS idx_game_rounds_round_number ON game_rounds(round_number);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_unique_game_round 
+ON game_rounds(game_session_id, round_number);
+
+CREATE TABLE IF NOT EXISTS card_plays (
+    id INTEGER PRIMARY KEY,
+    round_id INTEGER NOT NULL,
+    user_card_id INTEGER NOT NULL,
+    ai_card_id INTEGER NOT NULL,
+    play_order INTEGER NOT NULL,
+    FOREIGN KEY (round_id) REFERENCES game_rounds(id),
+    FOREIGN KEY (user_card_id) REFERENCES white_cards(id),
+    FOREIGN KEY (ai_card_id) REFERENCES white_cards(id)
+);
+CREATE INDEX IF NOT EXISTS idx_card_plays_round_id ON card_plays(round_id);
+CREATE INDEX IF NOT EXISTS idx_card_plays_user_card_id ON card_plays(user_card_id);
+CREATE INDEX IF NOT EXISTS idx_card_plays_ai_card_id ON card_plays(ai_card_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_unique_card_play 
+ON card_plays(round_id, play_order);
