@@ -1,0 +1,341 @@
+openapi: 3.0.0
+info:
+  title: Cards Against AI API
+  version: 1.0.1
+  description: API for the Cards Against AI game
+
+paths:
+  /status:
+    get:
+      summary: Check server capacity
+      responses:
+        '200':
+          description: Server status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  available_slots:
+                    type: integer
+                  max_users:
+                    type: integer
+
+  /users:
+    post:
+      summary: Create a new user session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+      responses:
+        '201':
+          description: User session created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid username or server at capacity
+
+  /ai-personalities:
+    get:
+      summary: Fetch available AI personalities
+      responses:
+        '200':
+          description: List of AI personalities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AIPersonality'
+    post:
+      summary: Create a new AI personality
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AIPersonalityInput'
+      responses:
+        '201':
+          description: AI personality created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIPersonality'
+        '400':
+          description: Invalid input
+
+  /game-sessions:
+    post:
+      summary: Create a new game session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                ai_personality_id:
+                  type: integer
+      responses:
+        '201':
+          description: Game session created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameSession'
+        '400':
+          description: Invalid input or server at capacity
+
+  /game-sessions/{session_id}:
+    get:
+      summary: Get game session state
+      parameters:
+        - in: path
+          name: session_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Current game session state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameSession'
+        '404':
+          description: Game session not found
+
+  /game-sessions/{session_id}/start:
+    post:
+      summary: Start the game session
+      parameters:
+        - in: path
+          name: session_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Game session started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameSession'
+        '404':
+          description: Game session not found
+
+  /game-rounds:
+    post:
+      summary: Create a new game round
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                game_session_id:
+                  type: integer
+                black_card_id:
+                  type: integer
+      responses:
+        '201':
+          description: Game round created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameRound'
+        '400':
+          description: Invalid input
+
+  /game-rounds/{round_id}/submit:
+    post:
+      summary: Submit card plays for a round
+      parameters:
+        - in: path
+          name: round_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_card_ids:
+                  type: array
+                  items:
+                    type: integer
+                ai_card_ids:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '200':
+          description: Cards submitted
+        '400':
+          description: Invalid submission
+        '404':
+          description: Game round not found
+
+  /game-rounds/{round_id}/result:
+    get:
+      summary: Get round result
+      parameters:
+        - in: path
+          name: round_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Round result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameRound'
+        '404':
+          description: Game round not found
+
+  /card-sets:
+    get:
+      summary: Get all card sets
+      responses:
+        '200':
+          description: List of card sets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CardSet'
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    AIPersonality:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        created_by:
+          type: integer
+
+    AIPersonalityInput:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+
+    GameSession:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        ai_personality_id:
+          type: integer
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+
+    GameRound:
+      type: object
+      properties:
+        id:
+          type: integer
+        game_session_id:
+          type: integer
+        round_number:
+          type: integer
+        black_card_id:
+          type: integer
+        user_score:
+          type: integer
+        ai_score:
+          type: integer
+        winner:
+          type: string
+          enum: [user, ai]
+        judge_explanation:
+          type: string
+
+    CardPlay:
+      type: object
+      properties:
+        id:
+          type: integer
+        round_id:
+          type: integer
+        user_card_id:
+          type: integer
+        ai_card_id:
+          type: integer
+        play_order:
+          type: integer
+
+    BlackCard:
+      type: object
+      properties:
+        id:
+          type: integer
+        text:
+          type: string
+        pick:
+          type: integer
+        watermark:
+          type: string
+
+    WhiteCard:
+      type: object
+      properties:
+        id:
+          type: integer
+        text:
+          type: string
+        watermark:
+          type: string
+
+    CardSet:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
