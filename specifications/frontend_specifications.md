@@ -1,7 +1,7 @@
-# Cards Against AI - Front end specifications
+# Cards Against AI - Front-end Specifications
 
 ## Overview
-Cards Against AI is a web-based game inspired by Cards Against Humanity, featuring a single human player competing against an AI opponent. The game consists of two main screens: a home page for AI opponent selection and the main game interface.
+Cards Against AI is a web-based game inspired by Cards Against Humanity, featuring a single human player competing against an AI opponent. The game consists of two main screens: a home page for user creation and AI opponent selection, and the main game interface.
 
 ## Technology Stack
 - Frontend: React
@@ -18,7 +18,7 @@ Cards Against AI is a web-based game inspired by Cards Against Humanity, featuri
 ### 1. Main Component (CardsAgainstAIMain)
 - Manages the state of whether the game has started
 - Handles the flow between the Home Page and the Game Page
-- Passes the selected AI opponent to the Game Page
+- Passes the selected AI opponent and username to the Game Page
 
 ### 2. Home Page (HomePage)
 #### Layout
@@ -27,15 +27,23 @@ Cards Against AI is a web-based game inspired by Cards Against Humanity, featuri
 
 #### Features
 - Game title: "Cards Against AI"
+- Username input field
 - AI opponent selection dropdown
 - "Add Custom AI" button
 - Custom AI name input field (appears when "Add Custom AI" is clicked)
-- "Start Game" button (enabled only when an AI is selected)
+- "Start Game" button (enabled only when a username is entered and an AI is selected)
 
 #### Functionality
+- Allows users to enter a username for the game session
 - Allows selection of pre-defined AI opponents
 - Enables creation of custom AI opponents
-- Starts the game with the selected AI opponent
+- Starts the game with the entered username and selected AI opponent
+
+#### User Management
+- Users claim a username for each game session
+- No authentication required; usernames are session-based
+- Implement client-side validation for username (e.g., non-empty, max length)
+- Store username in component state and pass it to the game page when starting a game
 
 ### 3. Game Page (CardAgainstAIGame)
 #### Layout
@@ -80,8 +88,8 @@ Cards Against AI is a web-based game inspired by Cards Against Humanity, featuri
   - "Next Round" button
 
 ## Gameplay Flow
-1. Player selects or creates an AI opponent on the Home Page
-2. Game starts with the selected AI opponent
+1. User enters a username and selects or creates an AI opponent on the Home Page
+2. Game starts with the entered username and selected AI opponent
 3. Black card is displayed for the round
 4. Player selects the required number of white cards
 5. Player submits their selection
@@ -104,15 +112,15 @@ Cards Against AI is a web-based game inspired by Cards Against Humanity, featuri
 
 ## Design Principles
 - High contrast between black and white elements
-- Simple color scheme: black, white, shades of gray, with blue and green accents for highlighting
+- Simple color scheme: black, white, shades of gray, with blue and green accents
 - Responsive layout adaptable to different screen sizes
 - Use of icons for visual representation of game elements
-- Clear visual feedback for card selection and round results
+- Clear visual feedback for user interactions (username entry, card selection, button states)
 
 ## Accessibility Considerations
 - Ensure sufficient color contrast for text readability
 - Provide alt text for all icons and images
-- Implement keyboard navigation for card selection and button interactions
+- Implement keyboard navigation for form inputs, card selection, and button interactions
 
 ## Future Enhancements (not implemented in current design)
 - Animations for card selection and modal appearances
@@ -121,7 +129,7 @@ Cards Against AI is a web-based game inspired by Cards Against Humanity, featuri
 - Multiplayer functionality
 
 ## Development Notes
-- Implement proper state management for game progression
+- Implement proper state management for user sessions and game progression
 - Ensure responsive design works across various device sizes
 - Implement actual game logic for AI opponent behavior and judging
 - Create reusable components for cards to maintain consistency
