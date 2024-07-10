@@ -73,6 +73,9 @@ Cards Against AI is a web-based game inspired by Cards Against Humanity, featuri
 - Score display
   - Shows player score, AI score, and current round
   - Uses icons for visual representation (User, Bot, Award)
+- Round counter to track the current round (1-10)
+- Logic to initiate a tiebreaker round if needed after the 10th round
+- Final results display showing the overall winner and final scores
 
 #### Right Side Components
 - Grid display of white cards (3 columns)
@@ -99,6 +102,15 @@ Cards Against AI is a web-based game inspired by Cards Against Humanity, featuri
   - Social sharing buttons (Twitter, Facebook, LinkedIn)
   - "Next Round" button
 
+#### Final Results Modal
+- Appears after the 10th round (or after the tiebreaker round if needed)
+- Displays the final scores for both the player and the AI
+- Announces the overall winner
+- Provides options to:
+  - Play Again (starts a new game with the same AI opponent)
+  - Change AI Opponent (returns to the home page)
+  - Share Results (similar to sharing individual rounds)
+
 ## Gameplay Flow
 1. User enters a username and selects or creates an AI opponent on the Home Page
 2. User clicks "Start Game" button
@@ -110,6 +122,13 @@ Cards Against AI is a web-based game inspired by Cards Against Humanity, featuri
 6. Player submits their selection
 7. Judge Decision Modal appears with both player's and AI's selections, highlighting the winner
 8. Player can share the result or proceed to the next round
+9. Steps 4-8 repeat for a total of 10 rounds
+10. After 10 rounds, the game determines the overall winner:
+    - If one player has a higher score, they are declared the winner
+    - In case of a tie, an extra tiebreaker round is played
+    - The tiebreaker round follows the same flow as a regular round
+    - The winner of the tiebreaker round is declared the overall game winner
+11. Display the final game results, including scores and the winner
 
 ## Error Handling and Game Termination
 
