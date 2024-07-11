@@ -6,7 +6,7 @@ import pandas as pd
 
 # Create a connection to the database
 conn_source = sqlite3.connect(Path(__file__).parent / "source.sqlite")
-conn_dest = sqlite3.connect(Path(__file__).parent / "cards.sqlite")
+conn_dest = sqlite3.connect(Path(__file__).parent.parent / "cards_against_ai.db")
 
 
 TABLES_TO_MOVE = {

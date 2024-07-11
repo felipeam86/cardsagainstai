@@ -5,3 +5,28 @@ poetry.lock
 *.ipynb_checkpoints
 *.sqlite
 *.pdf
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Poetry
+.venv/
+poetry.lock
+
+# Environment variables
+.env
+
+# SQLite
+*.db
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Testing
+.pytest_cache/
