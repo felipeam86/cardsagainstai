@@ -65,7 +65,9 @@ class User(Base):
     created_at = Column(DateTime, default=func.now())
 
     game_sessions = relationship("GameSession", back_populates="user")
-    ai_personalities = relationship("AIPersonality", back_populates="created_by")
+    created_ai_personalities = relationship(
+        "AIPersonality", back_populates="created_by"
+    )
 
 
 class AIPersonality(Base):
@@ -75,9 +77,9 @@ class AIPersonality(Base):
     name = Column(String, nullable=False, unique=True)
     description = Column(String)
     created_at = Column(DateTime, default=func.now())
-    created_by = Column(Integer, ForeignKey("users.id"))
+    created_by_id = Column(Integer, ForeignKey("users.id"))
 
-    user = relationship("User", back_populates="ai_personalities")
+    created_by = relationship("User", back_populates="created_ai_personalities")
     game_sessions = relationship("GameSession", back_populates="ai_personality")
 
 
