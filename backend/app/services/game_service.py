@@ -22,7 +22,7 @@ class GameService:
     async def create_game(self, user_id: int, ai_personality_id: int) -> GameSession:
         user = self.db.query(User).filter(User.id == user_id).first()
         if not user:
-            raise ValueError(f"User with id {user_id} not found")
+            raise ValueError("User not found")
 
         ai_personality = (
             self.db.query(AIPersonality)
@@ -30,7 +30,7 @@ class GameService:
             .first()
         )
         if not ai_personality:
-            raise ValueError(f"AI Personality with id {ai_personality_id} not found")
+            raise ValueError("AI Personality not found")
 
         game_session = GameSession(user_id=user_id, ai_personality_id=ai_personality_id)
         self.db.add(game_session)
@@ -51,7 +51,6 @@ class GameService:
         if not game_session:
             raise ValueError("Game session not found")
 
-        # Initialize game state, draw initial cards, etc.
         await self.redis.set_game_state(
             str(game_id),
             {
@@ -62,7 +61,6 @@ class GameService:
             },
         )
 
-        # Create first round
         black_card = self.card_service.draw_black_card()
         new_round = GameRound(
             game_session_id=game_id,
@@ -70,6 +68,8 @@ class GameService:
             black_card_id=black_card.id,
             user_score=0,
             ai_score=0,
+            winner="",
+            judge_explanation="",
         )
         self.db.add(new_round)
         self.db.commit()
@@ -130,13 +130,15 @@ class GameService:
         )
 
         if current_round.round_number >= 10:
-            # End the game
-            game_session.end_time = func.now()
-            await self.redis.set_game_state(str(game_id), {"status": "completed"})
-            self.db.commit()
-            return None
+            if current_round.user_score == current_round.ai_score:
+                # Tiebreaker round
+                new_round_number = 11
+            else:
+                game_session.end_time = func.now()
+                await self.redis.set_game_state(str(game_id), {"status": "completed"})
+                self.db.commit()
+                return None
 
-        # Create new round
         new_round_number = current_round.round_number + 1
         black_card = self.card_service.draw_black_card()
         new_round = GameRound(
@@ -145,6 +147,8 @@ class GameService:
             black_card_id=black_card.id,
             user_score=current_round.user_score,
             ai_score=current_round.ai_score,
+            winner="",
+            judge_explanation="",
         )
         self.db.add(new_round)
         self.db.commit()
@@ -160,3 +164,11 @@ class GameService:
         )
 
         return new_round
+
+    async def get_game_session(self, session_id: int) -> GameSession:
+        game_session = (
+            self.db.query(GameSession).filter(GameSession.id == session_id).first()
+        )
+        if not game_session:
+            raise ValueError("Game session not found")
+        return game_session

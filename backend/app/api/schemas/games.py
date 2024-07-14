@@ -1,14 +1,6 @@
-from datetime import datetime
 from pydantic import BaseModel
-from typing import List
-
-
-class GameSessionResponse(BaseModel):
-    id: int
-    user_id: int
-    ai_personality_id: int
-    start_time: datetime
-    end_time: datetime | None
+from typing import List, Optional
+from datetime import datetime
 
 
 class GameSessionCreate(BaseModel):
@@ -16,7 +8,25 @@ class GameSessionCreate(BaseModel):
     ai_personality_id: int
 
 
-class GameRoundResponse(BaseModel):
+class GameSessionResponse(BaseModel):
+    id: int
+    user_id: int
+    ai_personality_id: int
+    start_time: datetime
+    end_time: Optional[datetime]
+
+
+class GameStateResponse(BaseModel):
+    available_slots: int
+    max_users: int
+
+
+class CardSubmission(BaseModel):
+    user_card_ids: List[int]
+    ai_card_ids: List[int]
+
+
+class GameRound(BaseModel):
     id: int
     game_session_id: int
     round_number: int
@@ -25,21 +35,3 @@ class GameRoundResponse(BaseModel):
     ai_score: int
     winner: str
     judge_explanation: str
-
-
-class CardPlay(BaseModel):
-    id: int
-    round_id: int
-    user_card_id: int
-    ai_card_id: int
-    play_order: int
-
-
-class CardSubmission(BaseModel):
-    user_card_ids: List[int]
-    ai_card_ids: List[int]
-
-
-class GameStateResponse(BaseModel):
-    available_slots: int
-    max_users: int

@@ -24,10 +24,4 @@ def create_ai_personality(
     db.add(new_personality)
     db.commit()
     db.refresh(new_personality)
-    return AIPersonalityResponse(
-        id=new_personality.id,
-        name=new_personality.name,
-        description=new_personality.description,
-        created_at=str(new_personality.created_at),
-        created_by=new_personality.created_by_id,
-    )
+    return new_personality
