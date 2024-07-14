@@ -21,7 +21,15 @@ The backend is built using Python 3.10 with FastAPI framework, utilizing SQLite 
 
 ## 3. Data Model
 
-The data model is based on the provided SQLite schema, which includes tables for black cards, white cards, card sets, and their relationships. Additional tables may be required for user sessions and game history.
+The data model is based on the provided SQLite schema, which includes tables for black cards, white cards, card sets, and their relationships. Additional tables have been implemented for user sessions, game sessions, game rounds, and AI personalities.
+
+### Key Entities:
+- User: Represents a player in the game.
+- AIPersonality: Represents an AI opponent personality that can be selected for a game.
+- GameSession: Represents a single game session between a user and an AI opponent.
+- GameRound: Represents a single round within a game session.
+- BlackCard, WhiteCard: Represent the game cards.
+- CardSet: Represents a set of cards that can be used in the game.
 
 ## 4. API Endpoints
 
@@ -30,16 +38,16 @@ The data model is based on the provided SQLite schema, which includes tables for
 - DELETE /users/{user_id}: End a user session
 
 ### Game Management:
-- POST /games: Create a new game session
-- GET /games/{game_id}: Get game state
-- POST /games/{game_id}/start: Start the game
-- POST /games/{game_id}/submit: Submit card(s) for a round
-- GET /games/{game_id}/result: Get round result
-- POST /games/{game_id}/next: Proceed to next round
+- POST /game-sessions: Create a new game session
+- GET /game-sessions/{session_id}: Get game session state
+- POST /game-sessions/{session_id}/start: Start the game session
+- POST /game-rounds/{round_id}/submit: Submit card(s) for a round
+- GET /game-rounds/{round_id}/result: Get round result
 
 ### Card Management:
 - GET /cards/black: Get a new black card
 - GET /cards/white: Get white cards for a player
+- GET /card-sets: Get all available card sets
 
 ### Game History:
 - GET /history/{user_id}: Get game history for a user
@@ -76,24 +84,42 @@ The data model is based on the provided SQLite schema, which includes tables for
 - Ensure fair and random distribution of cards to both the user and AI opponent
 
 ### Game Flow:
-1. User creates a game session by selecting or creating an AI opponent personality.
-2. Game starts with drawing initial hands for both the user and AI opponent from the same deck
-3. For each round:
-   a. Display a black card (removed from the black card deck)
-   b. User and AI select white card(s) from their respective hands
-   c. Submit selections to the judge (Anthropic API)
-   d. Determine round winner and update scores
-   e. Replenish hands by drawing new white cards from the remaining deck
-   f. Record round history
-4. After 10 rounds, determine the game winner. Add an extra tiebraker round if needed
+1. User creates a game session by selecting an AI opponent personality.
+2. Game starts with drawing initial hands for both the user and AI opponent from the same deck.
+3. For each round (total of 10 rounds):
+   a. Display a black card
+   b. User selects white card(s) from their hand
+   c. AI opponent selects white card(s) using the Anthropic API
+   d. Submit selections to the judge (Anthropic API)
+   e. Determine round winner and update scores
+   f. Replenish hands by drawing new white cards from the remaining deck
+   g. Record round history
+4. After 10 rounds, determine the game winner
+   - If there's a tie, an extra tiebreaker round is played
 5. Save detailed game history
 
-### AI Integration:
-- Use Claude Haiku model for both the AI opponent and judge
-- Implement retry mechanism for API calls (max 3 attempts)
-- Gracefully handle errors and end the game if persistent issues occur
 
-## 6. Implementation Guidelines
+## 6. Redis Integration
+
+Redis is used for:
+- Storing active game states, including current round, scores, and game status
+- Managing active user sessions
+- Implementing the 100-user limit
+
+Game state in Redis is structured as a hash with the game session ID as the key, containing fields for status, current round, and scores.
+
+
+## 7. Anthropic API Integration
+
+The Anthropic API is used for:
+- AI opponent: Selecting white cards to play in response to black cards
+- Judge functionality: Determining the winner of each round and providing an explanation
+
+Retry mechanism: Implement up to 3 retry attempts for API calls, with exponential backoff.
+Error handling: If persistent issues occur after retries, gracefully end the game and inform the user.
+
+
+## 8. Implementation Guidelines
 
 ### Technology Stack:
 - Backend: Python 3.10 with FastAPI
@@ -160,7 +186,7 @@ cards_against_ai/
 - Provide inline documentation for all significant functions and classes
 - Create API documentation using FastAPI's built-in Swagger UI
 
-## 7. Deployment
+## 9. Deployment
 
 Use Docker and Docker Compose for containerization and easy deployment. The Dockerfile and docker-compose.yml files should be configured to set up the entire application stack, including the FastAPI server, SQLite database, and Redis instance.
 
@@ -187,6 +213,6 @@ services:
 
 Ensure that the Dockerfile uses Python 3.10 as the base image.
 
-## 8. Conclusion
+## 10. Conclusion
 
 This specification provides a comprehensive guide for implementing the Cards Against AI backend using Python 3.10 and Redis for caching and state management. The developer should adhere to Python 3.10 best practices, leverage Redis for efficient data caching and real-time operations, follow the FastAPI documentation for implementation details, and ensure robust error handling and testing throughout the development process.
