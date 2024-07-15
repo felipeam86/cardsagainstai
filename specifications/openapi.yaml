@@ -135,6 +135,25 @@ paths:
         '404':
           description: Game session not found
 
+  /game-sessions/{session_id}/end:
+    post:
+      summary: End the game session
+      parameters:
+        - in: path
+          name: session_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Game session ended
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameResult'
+        '404':
+          description: Game session not found
+
   /game-rounds:
     post:
       summary: Create a new game round
@@ -210,19 +229,6 @@ paths:
         '404':
           description: Game round not found
 
-  /card-sets:
-    get:
-      summary: Get all card sets
-      responses:
-        '200':
-          description: List of card sets
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CardSet'
-
 components:
   schemas:
     User:
@@ -274,6 +280,15 @@ components:
         end_time:
           type: string
           format: date-time
+        current_round:
+          type: integer
+        user_score:
+          type: integer
+        ai_score:
+          type: integer
+        status:
+          type: string
+          enum: [created, in_progress, completed]
 
     GameRound:
       type: object
@@ -296,18 +311,19 @@ components:
         judge_explanation:
           type: string
 
-    CardPlay:
+    GameResult:
       type: object
       properties:
-        id:
+        game_session_id:
           type: integer
-        round_id:
+        user_score:
           type: integer
-        user_card_id:
+        ai_score:
           type: integer
-        ai_card_id:
-          type: integer
-        play_order:
+        winner:
+          type: string
+          enum: [user, ai, tie]
+        rounds_played:
           type: integer
 
     BlackCard:
@@ -330,12 +346,4 @@ components:
         text:
           type: string
         watermark:
-          type: string
-
-    CardSet:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
           type: string

@@ -19,27 +19,6 @@ CREATE TABLE IF NOT EXISTS white_cards (
     watermark VARCHAR
 );
 
-CREATE TABLE IF NOT EXISTS card_set (
-    id INTEGER PRIMARY KEY,
-    name VARCHAR NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS card_set_black_card (
-    card_set_id INTEGER NOT NULL,
-    black_card_id INTEGER NOT NULL,
-    PRIMARY KEY (card_set_id, black_card_id),
-    FOREIGN KEY (card_set_id) REFERENCES card_set(id),
-    FOREIGN KEY (black_card_id) REFERENCES black_cards(id)
-);
-
-CREATE TABLE IF NOT EXISTS card_set_white_card (
-    card_set_id INTEGER NOT NULL,
-    white_card_id INTEGER NOT NULL,
-    PRIMARY KEY (card_set_id, white_card_id),
-    FOREIGN KEY (card_set_id) REFERENCES card_set(id),
-    FOREIGN KEY (white_card_id) REFERENCES white_cards(id)
-);
-
 -- Create user-related tables if they don't exist
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY,
