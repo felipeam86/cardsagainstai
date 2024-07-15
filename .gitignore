@@ -4,6 +4,7 @@ poetry.lock
 *ipynb
 *.ipynb_checkpoints
 *.sqlite
+*.db
 *.pdf
 *.csv
 *.json
