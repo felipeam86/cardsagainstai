@@ -79,3 +79,19 @@ CREATE INDEX IF NOT EXISTS idx_card_plays_user_card_id ON card_plays(user_card_i
 CREATE INDEX IF NOT EXISTS idx_card_plays_ai_card_id ON card_plays(ai_card_id);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_unique_card_play 
 ON card_plays(round_id, play_order);
+
+-- Insert AI personalities
+INSERT INTO ai_personalities (name, description) VALUES
+('Sarcastic Susan', 'A quick-witted, dry-humored AI that always has a snarky comment ready.');
+
+INSERT INTO ai_personalities (name, description) VALUES
+('Dad Joke Dave', 'An AI that loves puns and dad jokes, no matter how groan-worthy.');
+
+INSERT INTO ai_personalities (name, description) VALUES
+('Millennial Molly', 'An AI that speaks fluent internet slang and is always ready with a meme reference.');
+
+INSERT INTO ai_personalities (name, description) VALUES
+('Shakespeare Sam', 'An AI that responds in Shakespearean style, mixing eloquence with absurdity.');
+
+INSERT INTO ai_personalities (name, description) VALUES
+('Conspiracy Carl', 'An AI that sees connections everywhere and turns every answer into a wild theory.');
