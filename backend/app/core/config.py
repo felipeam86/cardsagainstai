@@ -3,7 +3,8 @@ from functools import lru_cache
 
 class Settings(BaseSettings):
     DATABASE_URL: str = "sqlite:///./cards_against_ai.db"
-    # Add other configuration variables here
+    REDIS_URL: str = "redis://localhost:6379"
+    ANTHROPIC_API_KEY: str
 
     class Config:
         env_file = ".env"
