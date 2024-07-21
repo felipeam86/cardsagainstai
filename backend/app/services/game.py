@@ -53,7 +53,7 @@ class GameService:
             previous_round_number,
             user_score,
             ai_score,
-        ) = self._get_latest_game_round_information(game_session_id=game_session_id)
+        ) = self.get_latest_game_round_information(game_session_id=game_session_id)
         game_round = GameRound(
             game_session_id=game_session_id,
             round_number=previous_round_number + 1,
@@ -150,7 +150,7 @@ class GameService:
             self.db.refresh(user)
         return user
 
-    def _get_latest_game_round_information(
+    def get_latest_game_round_information(
         self,
         game_session_id: int,
     ) -> Tuple[int, int, int]:

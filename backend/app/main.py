@@ -93,13 +93,22 @@ async def end_game_session(
     session_id: int, game_service: GameService = Depends(get_game_service)
 ):
     try:
-        result = game_service.end_game_session(session_id)
+        rounds_played, user_score, ai_score = (
+            game_service.get_latest_game_round_information(session_id)
+        )
+        if user_score > ai_score:
+            winner = "human"
+        elif ai_score > user_score:
+            winner = "ai"
+        else:
+            winner = "tie"
+
         return GameResult(
-            game_session_id=result["game_session_id"],
-            user_score=result["user_score"],
-            ai_score=result["ai_score"],
-            winner=result["winner"],
-            rounds_played=result["rounds_played"],
+            game_session_id=session_id,
+            user_score=user_score,
+            ai_score=ai_score,
+            winner=winner,
+            rounds_played=rounds_played,
         )
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
