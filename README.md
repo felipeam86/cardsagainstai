@@ -11,11 +11,10 @@ Thisis a game inspired by the famous Cards Against Humanity game.
 
 ## Rules
 - The game is played in real-time
-- Each player starts with 10 white cards
+- Both players share a 10 white cards hand
 - Rounds begin with a black card being revealed
 - Players submit white card(s) to answer the black card
 - The AI judge decides the winner of each round
-- The game lasts for 10 rounds, with an extra tiebreaker round if needed
+- The game lasts until the user hits "End Game" button
 - Black cards can require up to 3 white cards
 - Players must submit the exact number of required cards
-- Players draw new cards at the end of each round to always have 10 cards in hand

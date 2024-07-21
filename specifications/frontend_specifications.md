@@ -32,15 +32,12 @@ Cards Against AI is a web-based game inspired by Cards Against Humanity, featuri
 - "Add Custom AI" button
 - Custom AI name input field (appears when "Add Custom AI" is clicked)
 - "Start Game" button (enabled only when a username is entered and an AI is selected)
-- Error modal for user limit handling
 
 #### Functionality
 - Allows users to enter a username for the game session
 - Allows selection of pre-defined AI opponents
 - Enables creation of custom AI opponents
 - Starts the game with the entered username and selected AI opponent
-- Checks for user limit before starting the game
-- Displays an error modal if the user limit is reached
 
 #### User Management
 - Users claim a username for each game session
@@ -48,20 +45,11 @@ Cards Against AI is a web-based game inspired by Cards Against Humanity, featuri
 - Implement client-side validation for username (e.g., non-empty, max length)
 - Store username in component state and pass it to the game page when starting a game
 
-#### User Limit Handling
-- Before starting a game, check if the maximum user limit (100) has been reached
-- If the limit is reached, display an error modal with the following content:
-  - Title: "Unable to Start Game"
-  - Message: "We're sorry, but the maximum number of users are currently playing. Please try again later."
-  - Close button to dismiss the modal
-- The user limit is a hard cap configured through environment variables on the server
-- No queue system or wait time estimates are implemented; users are simply asked to try again later
-
 ### 3. Game Page (CardAgainstAIGame)
 #### Layout
 - Vertical split design
   - Left side (1/3 width): Black background, contains black card and scores
-  - Right side (2/3 width): Light gray background, contains white cards
+  - Right side (2/3 width): Light gray background, contains the hand of 10 white cards
 
 #### Left Side Components
 - Game title: "Cards Against AI"
@@ -73,14 +61,14 @@ Cards Against AI is a web-based game inspired by Cards Against Humanity, featuri
 - Score display
   - Shows player score, AI score, and current round
   - Uses icons for visual representation (User, Bot, Award)
-- Round counter to track the current round (1-10)
-- Logic to initiate a tiebreaker round if needed after the 10th round
+- Round counter to track the current round
 - Final results display showing the overall winner and final scores
 
 #### Right Side Components
 - Grid display of white cards (3 columns)
 - Card selection counter
 - "Submit Cards" button
+- "End Game" button
 
 #### White Card Design
 - White background with rounded corners and shadow
@@ -99,36 +87,26 @@ Cards Against AI is a web-based game inspired by Cards Against Humanity, featuri
     - Green for player win
     - Blue for AI win
   - Judge's explanation of the winning combination
-  - Social sharing buttons (Twitter, Facebook, LinkedIn)
   - "Next Round" button
 
 #### Final Results Modal
-- Appears after the 10th round (or after the tiebreaker round if needed)
+- Appears when user hits "End Game" button.
 - Displays the final scores for both the player and the AI
 - Announces the overall winner
 - Provides options to:
   - Play Again (starts a new game with the same AI opponent)
   - Change AI Opponent (returns to the home page)
-  - Share Results (similar to sharing individual rounds)
 
 ## Gameplay Flow
 1. User enters a username and selects or creates an AI opponent on the Home Page
 2. User clicks "Start Game" button
-3. System checks if the user limit has been reached
-   - If limit is not reached, game starts with the entered username and selected AI opponent
-   - If limit is reached, an error modal is displayed, and the user remains on the Home Page
-4. Once in the game, black card is displayed for the round
-5. Player selects the required number of white cards
-6. Player submits their selection
+3. Once in the game, black card and the 10 white card hand are displayed for the round
+4. Player selects the required number of white cards
+5. Player submits their selection
+6. Backend responds with game round results and ai chosen cards.
 7. Judge Decision Modal appears with both player's and AI's selections, highlighting the winner
-8. Player can share the result or proceed to the next round
-9. Steps 4-8 repeat for a total of 10 rounds
-10. After 10 rounds, the game determines the overall winner:
-    - If one player has a higher score, they are declared the winner
-    - In case of a tie, an extra tiebreaker round is played
-    - The tiebreaker round follows the same flow as a regular round
-    - The winner of the tiebreaker round is declared the overall game winner
-11. Display the final game results, including scores and the winner
+8. Steps 3-7 repeat until user hits "End Game" button
+9. Display the final game results, including scores and the winner
 
 ## Error Handling and Game Termination
 
@@ -165,14 +143,12 @@ Cards Against AI is a web-based game inspired by Cards Against Humanity, featuri
 - Multiplayer functionality
 
 ## Development Notes
-- Implement proper state management for user sessions and game progression
+- Implement proper state management for game sessions and progression
 - Ensure responsive design works across various device sizes
 - Implement actual game logic for AI opponent behavior and judging
 - Create reusable components for cards to maintain consistency
-- Implement actual social sharing functionality
 - Consider implementing a custom hook for card selection logic
 - Ensure smooth transitions when showing and hiding the judge decision modal
-- Implement server-side check for user limit before starting each game session
 - Ensure proper error handling for network requests, including user limit checks
 
-This summary provides a comprehensive overview of the design decisions for the Cards Against AI game, including the updated home page with user management and user limit handling. It covers the overall structure, detailed component specifications, gameplay flow, and design principles. The front-end developer should use this as a guide for implementing the user interface and interactions of the game.
+This summary provides a comprehensive overview of the design decisions for the Cards Against AI game, including the updated home page with user management. It covers the overall structure, detailed component specifications, gameplay flow, and design principles. The front-end developer should use this as a guide for implementing the user interface and interactions of the game.

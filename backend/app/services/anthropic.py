@@ -1,7 +1,6 @@
 import anthropic
 from typing import List
-from fastapi import HTTPException
-from app.core.config import get_settings
+from app.config import get_settings
 from app.db.models import WhiteCard, BlackCard, AIPersonality
 
 settings = get_settings()

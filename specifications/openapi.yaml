@@ -5,43 +5,6 @@ info:
   description: API for the Cards Against AI game
 
 paths:
-  /status:
-    get:
-      summary: Check server capacity
-      responses:
-        '200':
-          description: Server status
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  available_slots:
-                    type: integer
-                  max_users:
-                    type: integer
-
-  /users:
-    post:
-      summary: Create a new user session
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-      responses:
-        '201':
-          description: User session created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '400':
-          description: Invalid username or server at capacity
 
   /ai-personalities:
     get:
@@ -83,8 +46,8 @@ paths:
             schema:
               type: object
               properties:
-                user_id:
-                  type: integer
+                username:
+                  type: string
                 ai_personality_id:
                   type: integer
       responses:
@@ -96,44 +59,6 @@ paths:
                 $ref: '#/components/schemas/GameSession'
         '400':
           description: Invalid input or server at capacity
-
-  /game-sessions/{session_id}:
-    get:
-      summary: Get game session state
-      parameters:
-        - in: path
-          name: session_id
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Current game session state
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GameSession'
-        '404':
-          description: Game session not found
-
-  /game-sessions/{session_id}/start:
-    post:
-      summary: Start the game session
-      parameters:
-        - in: path
-          name: session_id
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Game session started
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GameSession'
-        '404':
-          description: Game session not found
 
   /game-sessions/{session_id}/end:
     post:
@@ -166,15 +91,22 @@ paths:
               properties:
                 game_session_id:
                   type: integer
-                black_card_id:
-                  type: integer
       responses:
-        '201':
+        '200':
           description: Game round created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GameRound'
+                type: object
+                properties:
+                  game_round:
+                    $ref: '#/components/schemas/GameRound'
+                  black_card:
+                    $ref: '#/components/schemas/BlackCard'
+                  white_cards:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WhiteCard'
         '400':
           description: Invalid input
 
@@ -198,50 +130,29 @@ paths:
                   type: array
                   items:
                     type: integer
-                ai_card_ids:
+                white_card_ids:
                   type: array
                   items:
                     type: integer
       responses:
         '200':
           description: Cards submitted
-        '400':
-          description: Invalid submission
-        '404':
-          description: Game round not found
-
-  /game-rounds/{round_id}/result:
-    get:
-      summary: Get round result
-      parameters:
-        - in: path
-          name: round_id
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Round result
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GameRound'
-        '404':
-          description: Game round not found
+                type: object
+                properties:
+                  game_round:
+                    $ref: '#/components/schemas/GameRound'
+                  ai_chosen_cards:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WhiteCard'
+        '400':
+          description: Invalid submission
 
 components:
   schemas:
-    User:
-      type: object
-      properties:
-        id:
-          type: integer
-        username:
-          type: string
-        created_at:
-          type: string
-          format: date-time
-
     AIPersonality:
       type: object
       properties:
@@ -280,15 +191,6 @@ components:
         end_time:
           type: string
           format: date-time
-        current_round:
-          type: integer
-        user_score:
-          type: integer
-        ai_score:
-          type: integer
-        status:
-          type: string
-          enum: [created, in_progress, completed]
 
     GameRound:
       type: object
@@ -307,7 +209,7 @@ components:
           type: integer
         winner:
           type: string
-          enum: [user, ai]
+          enum: [human, ai]
         judge_explanation:
           type: string
 
@@ -322,7 +224,7 @@ components:
           type: integer
         winner:
           type: string
-          enum: [user, ai, tie]
+          enum: [human, ai, tie]
         rounds_played:
           type: integer
 
@@ -337,6 +239,8 @@ components:
           type: integer
         watermark:
           type: string
+        category:
+          type: string
 
     WhiteCard:
       type: object
@@ -346,4 +250,6 @@ components:
         text:
           type: string
         watermark:
+          type: string
+        category:
           type: string
