@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, Depends
 from sqlmodel import Session, select
 from typing import List
 from app.db.database import get_session
-from app.db.models import AIPersonality, GameSession, GameRound, User
+from app.db.models import AIPersonality, BlackCard, GameSession, GameRound, WhiteCard
 from app.services.game import GameService
 from app.services.card_manager import CardManagerService
 from app.services.anthropic import AnthropicService
@@ -22,23 +22,9 @@ class AIPersonalityCreate(BaseModel):
     description: str
 
 
-class AIPersonalityResponse(BaseModel):
-    id: int
-    name: str
-    description: str
-
-
 class GameSessionCreate(BaseModel):
     username: str
     ai_personality_id: int
-
-
-class GameSessionResponse(BaseModel):
-    id: int
-    user_id: int
-    ai_personality_id: int
-    start_time: str
-    end_time: str | None
 
 
 class GameRoundCreate(BaseModel):
@@ -46,9 +32,14 @@ class GameRoundCreate(BaseModel):
 
 
 class GameRoundResponse(BaseModel):
-    game_round: dict
-    black_card: dict
-    white_cards: List[dict]
+    game_round: GameRound
+    black_card: BlackCard
+    white_cards: List[WhiteCard]
+
+
+class GameRoundResult(BaseModel):
+    game_round: GameRound
+    ai_chosen_cards: List[WhiteCard]
 
 
 class CardSubmission(BaseModel):
@@ -64,13 +55,13 @@ class GameResult(BaseModel):
     rounds_played: int
 
 
-@app.get("/ai-personalities", response_model=List[AIPersonalityResponse])
+@app.get("/ai-personalities", response_model=List[AIPersonality])
 def get_ai_personalities(db: Session = Depends(get_session)):
     personalities = db.exec(select(AIPersonality)).all()
     return personalities
 
 
-@app.post("/ai-personalities", response_model=AIPersonalityResponse, status_code=201)
+@app.post("/ai-personalities", response_model=AIPersonality, status_code=201)
 def create_ai_personality(
     personality: AIPersonalityCreate, db: Session = Depends(get_session)
 ):
@@ -83,7 +74,7 @@ def create_ai_personality(
     return db_personality
 
 
-@app.post("/game-sessions", response_model=GameSessionResponse, status_code=201)
+@app.post("/game-sessions", response_model=GameSession, status_code=201)
 async def create_game_session(
     session_data: GameSessionCreate,
     game_service: GameService = Depends(get_game_service),
@@ -92,15 +83,7 @@ async def create_game_session(
         game_session = await game_service.create_game_session(
             session_data.username, session_data.ai_personality_id
         )
-        return GameSessionResponse(
-            id=game_session.id,
-            user_id=game_session.user_id,
-            ai_personality_id=game_session.ai_personality_id,
-            start_time=game_session.start_time.isoformat(),
-            end_time=(
-                game_session.end_time.isoformat() if game_session.end_time else None
-            ),
-        )
+        return game_session
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -131,15 +114,15 @@ async def create_game_round(
             round_data.game_session_id
         )
         return GameRoundResponse(
-            game_round=game_round.dict(),
-            black_card=black_card.dict(),
-            white_cards=[card.dict() for card in white_cards],
+            game_round=game_round,
+            black_card=black_card,
+            white_cards=white_cards,
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@app.post("/game-rounds/{round_id}/submit", response_model=dict)
+@app.post("/game-rounds/{round_id}/submit", response_model=GameRoundResult)
 async def submit_game_round(
     round_id: int,
     submission: CardSubmission,
@@ -149,10 +132,10 @@ async def submit_game_round(
         game_round, ai_chosen_cards = await game_service.submit_game_round(
             round_id, submission.user_card_ids, submission.white_card_ids
         )
-        return {
-            "game_round": game_round.dict(),
-            "ai_chosen_cards": [card.dict() for card in ai_chosen_cards],
-        }
+        return GameRoundResult(
+            game_round=game_round,
+            ai_chosen_cards=ai_chosen_cards,
+        )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
