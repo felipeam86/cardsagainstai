@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS game_rounds (
     black_card_id INTEGER NOT NULL,
     user_score INTEGER NOT NULL,
     ai_score INTEGER NOT NULL,
-    winner VARCHAR NOT NULL CHECK (winner IN ('user', 'ai')),
+    winner VARCHAR CHECK (winner IN ('human', 'ai', 'tie', NULL)),
     judge_explanation TEXT,
     FOREIGN KEY (game_session_id) REFERENCES game_sessions(id),
     FOREIGN KEY (black_card_id) REFERENCES black_cards(id)

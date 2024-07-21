@@ -89,12 +89,21 @@ class GameService:
             white_cards=white_cards,
             ai_personality=ai_personality,
         )
-
-        winner, explanation = await self.anthropic_service.judge_round(
-            black_card=black_card,
-            user_cards=user_cards,
-            ai_cards=ai_chosen_cards,
+        tie = all(
+            [
+                user_card.id == ai_card.id
+                for user_card, ai_card in zip(user_cards, ai_chosen_cards)
+            ]
         )
+        if tie:
+            winner = "tie"
+            explanation = "The AI and human both played the same cards... so boring"
+        else:
+            winner, explanation = await self.anthropic_service.judge_round(
+                black_card=black_card,
+                user_cards=user_cards,
+                ai_cards=ai_chosen_cards,
+            )
 
         game_round.winner = winner
         game_round.judge_explanation = explanation
