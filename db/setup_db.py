@@ -10,8 +10,8 @@ conn_dest = sqlite3.connect(Path(__file__).parent.parent / "cards_against_ai.db"
 
 
 TABLES_TO_MOVE = {
-    "black_cards": ["id", "text", "pick", "watermark"],
-    "white_cards": ["id", "text", "watermark"],
+    "black_cards": ["id", "text", "pick", "watermark", "category"],
+    "white_cards": ["id", "text", "watermark", "category"],
 }
 
 

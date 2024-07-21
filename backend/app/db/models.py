@@ -6,6 +6,7 @@ from sqlmodel import Field, SQLModel
 def utc_now():
     return datetime.now(timezone.utc)
 
+
 class BlackCard(SQLModel, table=True):
     __tablename__ = "black_cards"
 
@@ -13,6 +14,8 @@ class BlackCard(SQLModel, table=True):
     text: str
     pick: int
     watermark: Optional[str] = None
+    category: Optional[str] = None
+
 
 class WhiteCard(SQLModel, table=True):
     __tablename__ = "white_cards"
@@ -20,6 +23,8 @@ class WhiteCard(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     text: str
     watermark: Optional[str] = None
+    category: Optional[str] = None
+
 
 class User(SQLModel, table=True):
     __tablename__ = "users"
@@ -27,6 +32,7 @@ class User(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     username: str = Field(unique=True)
     created_at: datetime = Field(default_factory=utc_now)
+
 
 class AIPersonality(SQLModel, table=True):
     __tablename__ = "ai_personalities"
@@ -37,6 +43,7 @@ class AIPersonality(SQLModel, table=True):
     created_at: datetime = Field(default_factory=utc_now)
     created_by: Optional[int] = Field(default=None, foreign_key="users.id")
 
+
 class GameSession(SQLModel, table=True):
     __tablename__ = "game_sessions"
 
@@ -45,6 +52,7 @@ class GameSession(SQLModel, table=True):
     ai_personality_id: int = Field(foreign_key="ai_personalities.id")
     start_time: datetime = Field(default_factory=utc_now)
     end_time: Optional[datetime] = None
+
 
 class GameRound(SQLModel, table=True):
     __tablename__ = "game_rounds"
@@ -57,6 +65,7 @@ class GameRound(SQLModel, table=True):
     ai_score: int
     winner: str
     judge_explanation: Optional[str] = None
+
 
 class CardPlay(SQLModel, table=True):
     __tablename__ = "card_plays"

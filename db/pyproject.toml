@@ -7,6 +7,8 @@ authors = ["Felipe Aguirre Martinez <felipeam86@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.10"
 pandas = "^2.2.2"
+openai = "^1.36.1"
+tqdm = "^4.66.4"
 
 
 [tool.poetry.group.dev.dependencies]

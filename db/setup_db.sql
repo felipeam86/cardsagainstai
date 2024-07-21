@@ -10,13 +10,15 @@ CREATE TABLE IF NOT EXISTS black_cards (
     id INTEGER PRIMARY KEY,
     text VARCHAR NOT NULL,
     pick INTEGER NOT NULL,
-    watermark VARCHAR
+    watermark VARCHAR NOT NULL,
+    category VARCHAR NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS white_cards (
     id INTEGER PRIMARY KEY,
     text VARCHAR NOT NULL,
-    watermark VARCHAR
+    watermark VARCHAR,
+    category VARCHAR
 );
 
 -- Create user-related tables if they don't exist

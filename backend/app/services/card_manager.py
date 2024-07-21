@@ -9,11 +9,13 @@ class CardManagerService:
         self.db = db
 
     def draw_black_card(self) -> BlackCard:
-        black_cards = self.db.exec(select(BlackCard)).all()
+        black_cards = self.db.exec(
+            select(BlackCard).where(BlackCard.category == "SAFE")
+        ).all()
         return random.choice(black_cards)
 
     def draw_white_cards(self, count: int) -> List[WhiteCard]:
         white_cards = self.db.exec(
-            select(WhiteCard).where(WhiteCard.watermark == "US")
+            select(WhiteCard).where(WhiteCard.category == "SAFE")
         ).all()
         return random.sample(white_cards, count)
