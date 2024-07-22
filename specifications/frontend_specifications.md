@@ -30,7 +30,7 @@ Cards Against AI is a web-based game inspired by Cards Against Humanity, featuri
 - Username input field
 - AI opponent selection dropdown
 - "Add Custom AI" button
-- Custom AI name input field (appears when "Add Custom AI" is clicked)
+- Custom AI name and description input field (appears when "Add Custom AI" is clicked)
 - "Start Game" button (enabled only when a username is entered and an AI is selected)
 
 #### Functionality
