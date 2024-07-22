@@ -81,12 +81,12 @@ export default function GamePage() {
           {whiteCards.map((card) => (
             <div
               key={card.id}
-              className={`bg-white p-3 rounded-lg shadow cursor-pointer transition-all duration-200 h-40 flex flex-col justify-between ${
+              className={`bg-white p-3 rounded-lg shadow cursor-pointer transition-all duration-200 h-28 flex flex-col justify-between ${
                 selectedCards.includes(card.id) ? 'ring-2 ring-blue-500 transform scale-105' : 'hover:shadow-lg'
               }`}
               onClick={() => handleCardSelect(card.id)}
             >
-              <p className="text-xs font-semibold leading-tight">{card.text}</p>
+              <p className="text-sm font-semibold leading-tight">{card.text}</p>
               <div className="self-end text-right">
                 <p className="text-gray-400 text-xxs">Cards Against Humanity</p>
               </div>
@@ -139,7 +139,7 @@ export default function GamePage() {
       {/* Judge Decision Modal */}
       {showJudgeModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full">
+          <div className="bg-white rounded-lg p-6 max-w-4xl w-full">
             <h2 className="text-2xl font-bold mb-4">Judge's Decision</h2>
             <div className="mb-4">
               <p className="text-lg font-semibold mb-2">Black Card:</p>
@@ -154,16 +154,24 @@ export default function GamePage() {
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
                 <p className="text-lg font-semibold mb-2">Your Play:</p>
-                <div className="bg-blue-100 p-3 rounded h-32 flex flex-col justify-between">
-                  <p className="text-sm">{whiteCards.find(card => card.id === selectedCards[0])?.text}</p>
-                  <p className="text-xs text-gray-500 self-end">Cards Against Humanity</p>
+                <div className="bg-blue-100 p-3 rounded">
+                  {[1, 5, 7].map((id) => (
+                    <div key={id} className="bg-white rounded p-2 mb-2 shadow">
+                      <p className="text-sm">{whiteCards.find(card => card.id === id)?.text}</p>
+                    </div>
+                  ))}
+                  <p className="text-xs text-gray-500 text-right mt-2">Cards Against Humanity</p>
                 </div>
               </div>
               <div>
                 <p className="text-lg font-semibold mb-2">AI's Play:</p>
-                <div className="bg-red-100 p-3 rounded h-32 flex flex-col justify-between">
-                  <p className="text-sm">{whiteCards[Math.floor(Math.random() * whiteCards.length)].text}</p>
-                  <p className="text-xs text-gray-500 self-end">Cards Against Humanity</p>
+                <div className="bg-red-100 p-3 rounded">
+                  {[2, 4, 9].map((id) => (
+                    <div key={id} className="bg-white rounded p-2 mb-2 shadow">
+                      <p className="text-sm">{whiteCards.find(card => card.id === id)?.text}</p>
+                    </div>
+                  ))}
+                  <p className="text-xs text-gray-500 text-right mt-2">Cards Against Humanity</p>
                 </div>
               </div>
             </div>

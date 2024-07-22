@@ -161,11 +161,11 @@ export default function GamePage({ initialGameData, onReturnHome }) {
       {/* Judge Decision Modal */}
       {showJudgeModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full">
+          <div className="bg-white rounded-lg p-6 max-w-4xl w-full">
             <h2 className="text-2xl font-bold mb-4">Judge's Decision</h2>
             <div className="mb-4">
               <p className="text-lg font-semibold mb-2">Black Card:</p>
-              <div className="bg-gray-800 text-white p-3 rounded flex flex-col justify-between h-32">
+              <div className="bg-gray-800 text-white p-3 rounded flex flex-col justify-between min-h-[8rem]">
                 <p className="text-xl">{gameState.black_card.text}</p>
                 <div className="self-end text-right">
                   <p className="text-gray-400 text-sm mb-1">Pick: {gameState.black_card.pick}</p>
@@ -176,22 +176,27 @@ export default function GamePage({ initialGameData, onReturnHome }) {
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
                 <p className="text-lg font-semibold mb-2">Your Play:</p>
-                <div className="bg-blue-100 p-3 rounded h-32 flex flex-col justify-between">
-                  <p className="text-sm">
-                    {selectedCards.map(id => 
-                      gameState.white_cards.find(card => card.id === id)?.text
-                    ).join(' ')}
-                  </p>
-                  <p className="text-xs text-gray-500 self-end">Cards Against Humanity</p>
+                <div className="space-y-2">
+                  {selectedCards.map(id => {
+                    const card = gameState.white_cards.find(card => card.id === id);
+                    return (
+                      <div key={id} className="bg-blue-100 p-3 rounded min-h-[8rem] flex flex-col justify-between">
+                        <p className="text-sm">{card?.text}</p>
+                        <p className="text-xs text-gray-500 self-end">Cards Against Humanity</p>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
               <div>
                 <p className="text-lg font-semibold mb-2">AI's Play:</p>
-                <div className="bg-red-100 p-3 rounded h-32 flex flex-col justify-between">
-                  <p className="text-sm">
-                    {gameState.ai_chosen_cards.map(card => card.text).join(' ')}
-                  </p>
-                  <p className="text-xs text-gray-500 self-end">Cards Against Humanity</p>
+                <div className="space-y-2">
+                  {gameState.ai_chosen_cards.map(card => (
+                    <div key={card.id} className="bg-red-100 p-3 rounded min-h-[8rem] flex flex-col justify-between">
+                      <p className="text-sm">{card.text}</p>
+                      <p className="text-xs text-gray-500 self-end">Cards Against Humanity</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
