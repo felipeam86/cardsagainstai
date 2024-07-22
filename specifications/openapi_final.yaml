@@ -1,0 +1,428 @@
+components:
+  schemas:
+    AIPersonality:
+      properties:
+        created_at:
+          format: date-time
+          title: Created At
+          type: string
+        created_by:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Created By
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Id
+        name:
+          title: Name
+          type: string
+      required:
+      - name
+      title: AIPersonality
+      type: object
+    AIPersonalityCreate:
+      properties:
+        description:
+          title: Description
+          type: string
+        name:
+          title: Name
+          type: string
+      required:
+      - name
+      - description
+      title: AIPersonalityCreate
+      type: object
+    BlackCard:
+      properties:
+        category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Category
+        id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Id
+        pick:
+          title: Pick
+          type: integer
+        text:
+          title: Text
+          type: string
+        watermark:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Watermark
+      required:
+      - text
+      - pick
+      title: BlackCard
+      type: object
+    CardSubmission:
+      properties:
+        user_card_ids:
+          items:
+            type: integer
+          title: User Card Ids
+          type: array
+        white_card_ids:
+          items:
+            type: integer
+          title: White Card Ids
+          type: array
+      required:
+      - user_card_ids
+      - white_card_ids
+      title: CardSubmission
+      type: object
+    GameResult:
+      properties:
+        ai_score:
+          title: Ai Score
+          type: integer
+        game_session_id:
+          title: Game Session Id
+          type: integer
+        rounds_played:
+          title: Rounds Played
+          type: integer
+        user_score:
+          title: User Score
+          type: integer
+        winner:
+          title: Winner
+          type: string
+      required:
+      - game_session_id
+      - user_score
+      - ai_score
+      - winner
+      - rounds_played
+      title: GameResult
+      type: object
+    GameRound:
+      properties:
+        ai_score:
+          title: Ai Score
+          type: integer
+        black_card_id:
+          title: Black Card Id
+          type: integer
+        game_session_id:
+          title: Game Session Id
+          type: integer
+        id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Id
+        judge_explanation:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Judge Explanation
+        round_number:
+          title: Round Number
+          type: integer
+        user_score:
+          title: User Score
+          type: integer
+        winner:
+          title: Winner
+          type: string
+      required:
+      - game_session_id
+      - round_number
+      - black_card_id
+      - user_score
+      - ai_score
+      - winner
+      title: GameRound
+      type: object
+    GameRoundCreate:
+      properties:
+        game_session_id:
+          title: Game Session Id
+          type: integer
+      required:
+      - game_session_id
+      title: GameRoundCreate
+      type: object
+    GameRoundResponse:
+      properties:
+        black_card:
+          $ref: '#/components/schemas/BlackCard'
+        game_round:
+          $ref: '#/components/schemas/GameRound'
+        white_cards:
+          items:
+            $ref: '#/components/schemas/WhiteCard'
+          title: White Cards
+          type: array
+      required:
+      - game_round
+      - black_card
+      - white_cards
+      title: GameRoundResponse
+      type: object
+    GameRoundResult:
+      properties:
+        ai_chosen_cards:
+          items:
+            $ref: '#/components/schemas/WhiteCard'
+          title: Ai Chosen Cards
+          type: array
+        game_round:
+          $ref: '#/components/schemas/GameRound'
+      required:
+      - game_round
+      - ai_chosen_cards
+      title: GameRoundResult
+      type: object
+    GameSession:
+      properties:
+        ai_personality_id:
+          title: Ai Personality Id
+          type: integer
+        end_time:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          title: End Time
+        id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Id
+        start_time:
+          format: date-time
+          title: Start Time
+          type: string
+        user_id:
+          title: User Id
+          type: integer
+      required:
+      - user_id
+      - ai_personality_id
+      title: GameSession
+      type: object
+    GameSessionCreate:
+      properties:
+        ai_personality_id:
+          title: Ai Personality Id
+          type: integer
+        username:
+          title: Username
+          type: string
+      required:
+      - username
+      - ai_personality_id
+      title: GameSessionCreate
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    WhiteCard:
+      properties:
+        category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Category
+        id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Id
+        text:
+          title: Text
+          type: string
+        watermark:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Watermark
+      required:
+      - text
+      title: WhiteCard
+      type: object
+info:
+  title: FastAPI
+  version: 0.1.0
+openapi: 3.1.0
+paths:
+  /ai-personalities:
+    get:
+      operationId: get_ai_personalities_ai_personalities_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/AIPersonality'
+                title: Response Get Ai Personalities Ai Personalities Get
+                type: array
+          description: Successful Response
+      summary: Get Ai Personalities
+    post:
+      operationId: create_ai_personality_ai_personalities_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AIPersonalityCreate'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIPersonality'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Create Ai Personality
+  /game-rounds:
+    post:
+      operationId: create_game_round_game_rounds_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameRoundCreate'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameRoundResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Create Game Round
+  /game-rounds/{round_id}/submit:
+    post:
+      operationId: submit_game_round_game_rounds__round_id__submit_post
+      parameters:
+      - in: path
+        name: round_id
+        required: true
+        schema:
+          title: Round Id
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardSubmission'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameRoundResult'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Submit Game Round
+  /game-sessions:
+    post:
+      operationId: create_game_session_game_sessions_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameSessionCreate'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameSession'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Create Game Session
+  /game-sessions/{session_id}/end:
+    post:
+      operationId: end_game_session_game_sessions__session_id__end_post
+      parameters:
+      - in: path
+        name: session_id
+        required: true
+        schema:
+          title: Session Id
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameResult'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: End Game Session
