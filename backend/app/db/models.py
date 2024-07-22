@@ -13,8 +13,9 @@ class BlackCard(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     text: str
     pick: int
-    watermark: Optional[str] = None
-    category: Optional[str] = None
+    watermark: str = None
+    category: str = None
+    language: str
 
 
 class WhiteCard(SQLModel, table=True):
@@ -22,8 +23,9 @@ class WhiteCard(SQLModel, table=True):
 
     id: Optional[int] = Field(default=None, primary_key=True)
     text: str
-    watermark: Optional[str] = None
-    category: Optional[str] = None
+    watermark: str = None
+    category: str = None
+    language: str
 
 
 class User(SQLModel, table=True):

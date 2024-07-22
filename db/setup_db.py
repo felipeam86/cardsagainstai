@@ -14,6 +14,13 @@ TABLES_TO_MOVE = {
     "white_cards": ["id", "text", "watermark", "category"],
 }
 
+EXTRA_WHITE_CARDS = list(
+    (Path(__file__).parent / "colombian_cards").glob("tarjetas-blancas*.csv")
+)
+EXTRA_BLACK_CARDS = list(
+    (Path(__file__).parent / "colombian_cards").glob("tarjetas-negras*.csv")
+)
+
 
 def setup_db():
 
@@ -29,8 +36,34 @@ def setup_db():
         df_source = pd.read_sql(f"SELECT {columns_str} FROM {table}", conn_source)
         df_source.to_sql(table, conn_dest, index=False, if_exists="append")
 
-    conn_dest.close()
+
+def insert_extra_cards():
+    df_black = pd.concat(
+        [
+            pd.read_csv(csv_file).assign(
+                watermark=csv_file.name.split(".")[0].split("-")[-1].upper(),
+                category="SAFE",
+                language="ES",
+            )
+            for csv_file in EXTRA_BLACK_CARDS
+        ]
+    )
+
+    df_white = pd.concat(
+        [
+            pd.read_csv(csv_file).assign(
+                watermark=csv_file.name.split(".")[0].split("-")[-1].upper(),
+                category="SAFE",
+                language="ES",
+            )
+            for csv_file in EXTRA_WHITE_CARDS
+        ]
+    )
+    df_black.to_sql("black_cards", con=conn_dest, index=False, if_exists="append")
+    df_white.to_sql("white_cards", con=conn_dest, index=False, if_exists="append")
 
 
 if __name__ == "__main__":
     setup_db()
+    insert_extra_cards()
+    conn_dest.close()

@@ -11,14 +11,16 @@ CREATE TABLE IF NOT EXISTS black_cards (
     text VARCHAR NOT NULL,
     pick INTEGER NOT NULL,
     watermark VARCHAR NOT NULL,
-    category VARCHAR NOT NULL
+    category VARCHAR NOT NULL,
+    language VARCHAR NOT NULL DEFAULT 'EN'
 );
 
 CREATE TABLE IF NOT EXISTS white_cards (
     id INTEGER PRIMARY KEY,
     text VARCHAR NOT NULL,
     watermark VARCHAR,
-    category VARCHAR
+    category VARCHAR,
+    language VARCHAR NOT NULL DEFAULT 'EN'
 );
 
 -- Create user-related tables if they don't exist
