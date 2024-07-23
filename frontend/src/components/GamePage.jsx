@@ -10,6 +10,22 @@ export default function GamePage({ initialGameData, onReturnHome }) {
   const [showFinalResultModal, setShowFinalResultModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [cardTransforms, setCardTransforms] = useState({});
+  
+  const getRandomTransform = () => {
+    const rotation = Math.random() * 10 - 5; // Random rotation between -3 and 3 degrees
+    const translateX = Math.random() * 14 - 7; // Random X displacement between -5px and 5px
+    const translateY = Math.random() * 14 - 7; // Random Y displacement between -5px and 5px
+    return `rotate(${rotation}deg) translate(${translateX}px, ${translateY}px)`;
+  };
+
+  useEffect(() => {
+    const newTransforms = {};
+    gameState.white_cards.forEach(card => {
+      newTransforms[card.id] = getRandomTransform();
+    });
+    setCardTransforms(newTransforms);
+  }, [gameState.white_cards]);
 
   useEffect(() => {
     console.log('Game Page initialized with data:', initialGameData);
@@ -104,8 +120,13 @@ export default function GamePage({ initialGameData, onReturnHome }) {
             <div
               key={card.id}
               className={`bg-white p-3 rounded-lg shadow cursor-pointer transition-all duration-200 h-40 flex flex-col justify-between ${
-                selectedCards.includes(card.id) ? 'ring-2 ring-blue-500 transform scale-105' : 'hover:shadow-lg'
+                selectedCards.includes(card.id) 
+                  ? 'ring-2 ring-blue-500 transform scale-105' 
+                  : 'hover:shadow-lg hover:scale-102'
               }`}
+              style={{
+                transform: selectedCards.includes(card.id) ? 'none' : cardTransforms[card.id],
+              }}
               onClick={() => handleCardSelect(card.id)}
             >
               <p className="text-xs font-semibold leading-tight">{card.text}</p>
