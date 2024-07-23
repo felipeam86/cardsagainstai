@@ -92,7 +92,7 @@ export default function GamePage({ initialGameData, onReturnHome }) {
           <p className="text-white text-xl font-bold">{gameState.black_card.text}</p>
           <div className="self-end text-right">
             <p className="text-gray-400 text-sm mb-1">Pick: {gameState.black_card.pick}</p>
-            <p className="text-gray-400 text-xs">Cards Against Humanity</p>
+            <p className="text-gray-400 text-xs">{gameState.black_card.watermark}</p>
           </div>
         </div>
       </div>
@@ -110,7 +110,7 @@ export default function GamePage({ initialGameData, onReturnHome }) {
             >
               <p className="text-xs font-semibold leading-tight">{card.text}</p>
               <div className="self-end text-right">
-                <p className="text-gray-400 text-xxs">Cards Against Humanity</p>
+                <p className="text-gray-400 text-xxs">{card.watermark}</p>
               </div>
             </div>
           ))}
@@ -169,7 +169,7 @@ export default function GamePage({ initialGameData, onReturnHome }) {
                 <p className="text-xl">{gameState.black_card.text}</p>
                 <div className="self-end text-right">
                   <p className="text-gray-400 text-sm mb-1">Pick: {gameState.black_card.pick}</p>
-                  <p className="text-gray-400 text-xs">Cards Against Humanity</p>
+                  <p className="text-gray-400 text-xs">{gameState.black_card.watermark}</p>
                 </div>
               </div>
             </div>
@@ -182,7 +182,7 @@ export default function GamePage({ initialGameData, onReturnHome }) {
                     return (
                       <div key={id} className="bg-blue-100 p-3 rounded min-h-[8rem] flex flex-col justify-between">
                         <p className="text-sm">{card?.text}</p>
-                        <p className="text-xs text-gray-500 self-end">Cards Against Humanity</p>
+                        <p className="text-xs text-gray-500 self-end">{card?.watermark}</p>
                       </div>
                     );
                   })}
@@ -194,7 +194,7 @@ export default function GamePage({ initialGameData, onReturnHome }) {
                   {gameState.ai_chosen_cards.map(card => (
                     <div key={card.id} className="bg-red-100 p-3 rounded min-h-[8rem] flex flex-col justify-between">
                       <p className="text-sm">{card.text}</p>
-                      <p className="text-xs text-gray-500 self-end">Cards Against Humanity</p>
+                      <p className="text-xs text-gray-500 self-end">{card.watermark}</p>
                     </div>
                   ))}
                 </div>
